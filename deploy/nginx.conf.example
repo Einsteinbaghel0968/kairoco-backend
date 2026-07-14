@@ -1,0 +1,19 @@
+# Example nginx reverse proxy for the Kairo Co backend on a Hostinger VPS.
+# Place under /etc/nginx/sites-available/ and symlink into sites-enabled.
+
+server {
+    listen 80;
+    server_name api.kairoco.co.uk;
+
+    client_max_body_size 25M;  # allow multi-image property uploads
+
+    location / {
+        proxy_pass http://127.0.0.1:8000;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+}
+
+# After confirming this works, run `certbot --nginx` to add HTTPS.
